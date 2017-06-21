@@ -1,0 +1,5 @@
+zipfile
+cPickle
+numpy
+scipy
+scikit-image
