@@ -4,7 +4,8 @@ import numpy as np
 from scipy.io import loadmat
 from scipy.linalg import norm
 
-def load_mat_features(data_mat_file, pairs_mat_file, nrof_kflods=10, nrof_features_per_fold=600):
+
+def load_mat_features(data_mat_file, pairs_mat_file, nrof_kfolds=10, nrof_features_per_fold=600):
 
     nrof_features_per_fold /= 2
 #    print nrof_features_per_fold
@@ -20,28 +21,28 @@ def load_mat_features(data_mat_file, pairs_mat_file, nrof_kflods=10, nrof_featur
     assert(pos_pairs.shape == neg_pairs.shape)
     assert(pos_pairs.shape[0] == 2)
     assert(neg_pairs.shape[0] == 2)
-    assert(pos_pairs.shape[1] == nrof_features_per_fold * nrof_kflods)
-    assert(neg_pairs.shape[1] == nrof_features_per_fold * nrof_kflods)
+    assert(pos_pairs.shape[1] == nrof_features_per_fold * nrof_kfolds)
+    assert(neg_pairs.shape[1] == nrof_features_per_fold * nrof_kfolds)
 
     features = data['features']
     print "features.shape: ", features.shape
 
-    pos_ind_1 = pos_pairs[0].reshape(nrof_kflods, nrof_features_per_fold)
-    pos_ind_2 = pos_pairs[1].reshape(nrof_kflods, nrof_features_per_fold)
+    pos_ind_1 = pos_pairs[0].reshape(nrof_kfolds, nrof_features_per_fold)
+    pos_ind_2 = pos_pairs[1].reshape(nrof_kfolds, nrof_features_per_fold)
 
 #    print pos_ind_1.shape
 #    print pos_ind_2.shape
 
-    neg_ind_1 = neg_pairs[0].reshape(nrof_kflods, nrof_features_per_fold)
-    neg_ind_2 = neg_pairs[1].reshape(nrof_kflods, nrof_features_per_fold)
+    neg_ind_1 = neg_pairs[0].reshape(nrof_kfolds, nrof_features_per_fold)
+    neg_ind_2 = neg_pairs[1].reshape(nrof_kfolds, nrof_features_per_fold)
 
 #    print neg_ind_1.shape
 #    print neg_ind_2.shape
 
     ind_1 = np.hstack((pos_ind_1, neg_ind_1)).reshape(
-        nrof_features_per_fold * nrof_kflods * 2)
+        nrof_features_per_fold * nrof_kfolds * 2)
     ind_2 = np.hstack((pos_ind_2, neg_ind_2)).reshape(
-        nrof_features_per_fold * nrof_kflods * 2)
+        nrof_features_per_fold * nrof_kfolds * 2)
 
 #    print ind_1.shape
 #    print ind_2.shape
@@ -62,10 +63,13 @@ def load_mat_features(data_mat_file, pairs_mat_file, nrof_kflods=10, nrof_featur
         (embeddings1[np.newaxis, ...], embeddings2[np.newaxis, ...])
     )
 
-    tmp = np.hstack((np.ones(nrof_features_per_fold),
-                     np.zeros(nrof_features_per_fold)))
-#    tmp = tmp.reshape((nrof_features_per_fold * 2, 1))
-    gt_labels = np.tile(tmp, nrof_kflods)
+#     tmp = np.hstack((np.ones(nrof_features_per_fold),
+#                      np.zeros(nrof_features_per_fold)))
+# #    tmp = tmp.reshape((nrof_features_per_fold * 2, 1))
+#     gt_labels = np.tile(tmp, nrof_kfolds)
+    gt_labels = ([1] * nrof_features_per_fold + [0] *
+                 nrof_features_per_fold) * nrof_kfolds
+    gt_labels = np.array(gt_labels)
 
     return (embeddings, gt_labels)
 
@@ -75,7 +79,7 @@ if __name__ == "__main__":
     pairs_mat_file = './lfw_pairs_zyf.mat'
     (embeddings, gt_labels) = load_mat_features(data_mat_file,
                                                 pairs_mat_file,
-                                                nrof_kflods=10,
+                                                nrof_kfolds=10,
                                                 nrof_features_per_fold=600)
 
     print('embeddings.shape: {}'.format(embeddings.shape))

@@ -41,10 +41,12 @@ def evaluate(embeddings, actual_issame, nrof_folds=10):
     print('embeddings2.shape: {}'.format(embeddings2.shape))
 
     tpr, fpr, accuracy = calc_roc.calculate_roc(thresholds, embeddings1, embeddings2,
-                                                np.asarray(actual_issame), nrof_folds=nrof_folds)
+                                                np.asarray(actual_issame),
+                                                nrof_folds=nrof_folds)
     thresholds = np.arange(0, 4, 0.001)
     val, val_std, far = calc_roc.calculate_val(thresholds, embeddings1, embeddings2,
-                                               np.asarray(actual_issame), 1e-3, nrof_folds=nrof_folds)
+                                               np.asarray(actual_issame), 1e-3, 
+                                               nrof_folds=nrof_folds)
     return tpr, fpr, accuracy, val, val_std, far
 
 

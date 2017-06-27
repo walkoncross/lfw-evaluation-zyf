@@ -29,7 +29,8 @@ def main(args):
 #    print('len(actual_issame): {}'.format(len(actual_issame)))
 
     tpr, fpr, accuracy, val, val_std, far = lfw.evaluate(emb_array,
-        actual_issame, nrof_folds=args.lfw_nrof_folds)
+                                                         actual_issame, 
+                                                         nrof_folds = args.lfw_nrof_folds)
 
     print('Accuracy: %1.3f+-%1.3f' % (np.mean(accuracy), np.std(accuracy)))
     print('Validation rate: %2.5f+-%2.5f @ FAR=%2.5f' % (val, val_std, far))
@@ -44,14 +45,15 @@ def parse_arguments(argv):
     parser = argparse.ArgumentParser()
 
     parser.add_argument('feature_mat_file', type=str,
-        help='Path to the .mat feature file.')
+                        help='Path to the .mat feature file.')
     parser.add_argument('--lfw_pairs_mat_file', type=str,
-        help='The file containing the pairs to use for validation.', default='./lfw_pairs_zyf.mat')
+                        help='The file containing the pairs to use for validation.', default='./lfw_pairs_zyf.mat')
     parser.add_argument('--lfw_nrof_folds', type=int,
-        help='Number of folds to use for cross validation. Mainly used for testing.', default=10)
+                        help='Number of folds to use for cross validation. Mainly used for testing.', default=10)
     parser.add_argument('--nrof_features_per_fold', type=int,
-        help='Number of pairs in each fold.', default=600)
+                        help='Number of pairs in each fold.', default=600)
     return parser.parse_args(argv)
+
 
 if __name__ == '__main__':
     main(parse_arguments(sys.argv[1:]))

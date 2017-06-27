@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+jian#!/usr/bin/env python
 
 import numpy as np
 from sklearn.model_selection import KFold
@@ -106,6 +106,9 @@ def calculate_accuracy(threshold, dist, actual_issame):
 def calculate_val(thresholds, embeddings1, embeddings2, actual_issame, far_target, nrof_folds=10):
     assert(embeddings1.shape[0] == embeddings2.shape[0])
     assert(embeddings1.shape[1] == embeddings2.shape[1])
+
+#    thresholds = np.zeros(actual_issame.shape)
+
     nrof_pairs = min(len(actual_issame), embeddings1.shape[0])
     nrof_thresholds = len(thresholds)
     k_fold = KFold(n_splits=nrof_folds, shuffle=False)
@@ -116,6 +119,8 @@ def calculate_val(thresholds, embeddings1, embeddings2, actual_issame, far_targe
     diff = np.subtract(embeddings1, embeddings2)
     dist = np.sum(np.square(diff), 1)
     indices = np.arange(nrof_pairs)
+
+#    thresholds = np.sort(dist)
 
     for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
 #        thresholds = np.sort(dist[train_set])
