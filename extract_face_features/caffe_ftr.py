@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 # Name:        caffe_ftr
 # Purpose:
 #
@@ -7,7 +7,7 @@
 # Created:     14/07/2014
 # Copyright:   (c) wuhao 2014
 # Licence:     <your licence>
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 from collections import OrderedDict
 import gzip
@@ -32,14 +32,17 @@ import caffe
 class UnpickleError(Exception):
     pass
 
+
 def pickle(filename, data, compress=False):
     if compress:
-        fo = zipfile.ZipFile(filename, 'w', zipfile.ZIP_DEFLATED, allowZip64=True)
+        fo = zipfile.ZipFile(
+            filename, 'w', zipfile.ZIP_DEFLATED, allowZip64=True)
         fo.writestr('data', cPickle.dumps(data, -1))
     else:
         fo = open(filename, "wb")
         cPickle.dump(data, fo, protocol=cPickle.HIGHEST_PROTOCOL)
     fo.close()
+
 
 def unpickle(filename):
     if not os.path.exists(filename):
@@ -47,7 +50,7 @@ def unpickle(filename):
     f = open(filename, 'rb')
     header = f.read(4)
     f.close()
-    if cmp(header, '\x50\x4b\x03\x04')==0:
+    if cmp(header, '\x50\x4b\x03\x04') == 0:
         fo = zipfile.ZipFile(filename, 'r', zipfile.ZIP_DEFLATED)
         dict = cPickle.loads(fo.read('data'))
     else:
@@ -55,6 +58,7 @@ def unpickle(filename):
         dict = cPickle.load(fo)
     fo.close()
     return dict
+
 
 def load_image_list(img_dir, list_file_name):
     list_file_path = os.path.join(img_dir, list_file_name)
@@ -69,21 +73,25 @@ def load_image_list(img_dir, list_file_name):
         labels.append(items[1].strip())
     return image_fullpath_list, labels, image_list
 
+
 def blobs_data(blob):
     try:
         d = blob.const_data
-        #print 'GPU mode.'
+        # print 'GPU mode.'
     except AttributeError:
-        #print 'GPU mode not support.'
+        # print 'GPU mode not support.'
         d = blob.data
     return d
+
+
 def blobs_diff(blob):
     try:
         d = blob.const_diff
     except AttributeError:
-        #print 'GPU mode not support.'
+        # print 'GPU mode not support.'
         d = blob.diff
     return d
+
 
 def detect_GPU_extract_support(net):
     k, blob = net.blobs.items()[0]
@@ -95,9 +103,10 @@ def detect_GPU_extract_support(net):
         gpu_support = 0
     return gpu_support
 
+
 def extract_feature(network_proto_path,
                     network_model_path,
-                    image_list, data_mean, layer_name, image_as_grey = False):
+                    image_list, data_mean, layer_name, image_as_grey=False):
     """
     Extracts features for given model and image list.
 
@@ -109,7 +118,7 @@ def extract_feature(network_proto_path,
     layer_name: The name of layer whose output would be extracted.
     save_path: The file path of extracted features to be saved.
     """
-    #network_proto_path, network_model_path = network_path
+    # network_proto_path, network_model_path = network_path
 
     #--->added by zhaoyafei 2017-05-09
 #    caffe.set_phase_test()
@@ -117,8 +126,10 @@ def extract_feature(network_proto_path,
         data_mean = np.load(data_mean)
 
     caffe.set_mode_gpu()
-#    net = caffe.Classifier(network_proto_path, network_model_path, None, data_mean, None, None, (2,1,0))
-    net = caffe.Classifier(network_proto_path, network_model_path, None, data_mean, 0.0078125, 255, (2,1,0))
+# net = caffe.Classifier(network_proto_path, network_model_path, None,
+# data_mean, None, None, (2,1,0))
+    net = caffe.Classifier(network_proto_path, network_model_path,
+                           None, data_mean, 0.0078125, 255, (2, 1, 0))
 #    net = caffe.Classifier(network_proto_path, network_model_path, None, data_mean, 2.0, 1.0, (2,1,0))
    #--->end added by zhaoyafei 2017-05-09
 
@@ -138,58 +149,58 @@ def extract_feature(network_proto_path,
 #    net.set_input_scale('data', 1)
     #--->end commented by zhaoyafei 2017-05-09
 
-    #img_list = [caffe.io.load_image(p) for p in image_file_list]
+    # img_list = [caffe.io.load_image(p) for p in image_file_list]
 
     #----- test
 
-    blobs = OrderedDict( [(k, v.data) for k, v in net.blobs.items()])
+    blobs = OrderedDict([(k, v.data) for k, v in net.blobs.items()])
 
-    #blobs = OrderedDict( [(k, v.data) for k, v in net.blobs.items()])
+    # blobs = OrderedDict( [(k, v.data) for k, v in net.blobs.items()])
     shp = blobs[layer_name].shape
     print blobs['data'].shape
 
     batch_size = blobs['data'].shape[0]
     print blobs[layer_name].shape
-    #print 'debug-------\nexit'
-    #exit()
+    # print 'debug-------\nexit'
+    # exit()
 
-    #params = OrderedDict( [(k, (v[0].data,v[1].data)) for k, v in net.params.items()])
-    #features_shape = (len(image_list), shp[1], shp[2], shp[3])
-    #features_shape = (len(image_list), shp[1])
+    # params = OrderedDict( [(k, (v[0].data,v[1].data)) for k, v in net.params.items()])
+    # features_shape = (len(image_list), shp[1], shp[2], shp[3])
+    # features_shape = (len(image_list), shp[1])
     features_shape = (len(image_list),) + shp[1:]
     features = np.empty(features_shape, dtype='float32', order='C')
     img_batch = []
 
-	cnt_load_img = 0
-	cnt_predict = 0
+    cnt_load_img = 0
+    cnt_predict = 0
 
-	time_load_img = 0.0
-	time_predict = 0.0
+    time_load_img = 0.0
+    time_predict = 0.0
 
     for cnt, path in zip(range(features_shape[0]), image_list):
-		t1 = time.clock()
+        t1 = time.clock()
         img = caffe.io.load_image(path, color = not image_as_grey)
         if image_as_grey and img.shape[2] != 1:
             img = skimage.color.rgb2gray(img)
             img = img[:, :, np.newaxis]
         if cnt == 0:
             print 'image shape: ', img.shape
-        #print img[0:10,0:10,:]
-        #exit()
+        # print img[0:10,0:10,:]
+        # exit()
         img_batch.append(img)
-		t2 = time.clock()
+        t2 = time.clock()
 
-		cnt_load_img += 1
-		time_predict += (t2 -t1)
+        cnt_load_img += 1
+        time_predict += (t2 -t1)
 
-        #print 'image shape: ', img.shape
-        #print path, type(img), img.mean()
+        # print 'image shape: ', img.shape
+        # print path, type(img), img.mean()
         if (len(img_batch) == batch_size) or cnt==features_shape[0]-1:
-			t1 = time.clock()
-			scores = net.predict(img_batch, oversample=False)
-			t2 = time.clock()
-			time_predict += (t2-t1)
-			cnt_predict += len(img_batch)
+            t1 = time.clock()
+            scores = net.predict(img_batch, oversample=False)
+            t2 = time.clock()
+            time_predict += (t2-t1)
+            cnt_predict += len(img_batch)
 
             '''
             print 'blobs[%s].shape' % (layer_name,)
@@ -200,32 +211,32 @@ def extract_feature(network_proto_path,
             print blobs[layer_name].copy().shape
             print cnt, len(img_batch)
             print batch_size
-            #exit()
+            # exit()
 
-            #print img_batch[0:10]
-            #print blobs[layer_name][:,:,0,0]
-            #exit()
+            # print img_batch[0:10]
+            # print blobs[layer_name][:,:,0,0]
+            # exit()
             '''
 
             # must call blobs_data(v) again, because it invokes (mutable_)cpu_data() which
             # syncs the memory between GPU and CPU
             blobs = OrderedDict( [(k, v.data) for k, v in net.blobs.items()])
 
-			print 'predict %d images cost %f seconds, average time: %f seconds' % (len(img_batch), time_predict, time_predict/len(img_batch))
+            print 'predict %d images cost %f seconds, average time: %f seconds' % (len(img_batch), time_predict, time_predict/len(img_batch))
 
             print '%d images processed' % (cnt+1,)
 
-            #print blobs[layer_name][0,:,:,:]
+            # print blobs[layer_name][0,:,:,:]
             # items of blobs are references, must make copy!
-            #features[cnt-len(img_batch)+1:cnt+1, :,:,:] = blobs[layer_name][0:len(img_batch),:,:,:].copy()
-            #features[cnt-len(img_batch)+1:cnt+1, :] = blobs[layer_name][0:len(img_batch),:].copy()
+            # features[cnt-len(img_batch)+1:cnt+1, :,:,:] = blobs[layer_name][0:len(img_batch),:,:,:].copy()
+            # features[cnt-len(img_batch)+1:cnt+1, :] = blobs[layer_name][0:len(img_batch),:].copy()
             features[cnt-len(img_batch)+1:cnt+1, ...] = blobs[layer_name][0:len(img_batch), ...].copy()
             img_batch = []
 
-        #features.append(blobs[layer_name][0,:,:,:].copy())
-	
-	print('Load %d images, cost %f seconds, average time: %f seconds' % (cnt_load_img, time_load_img, time_load_img/cnt_load_img))
-	print('Predict %d images, cost %f seconds, average time: %f seconds' % (cnt_predict, time_predict, time_predict/cnt_predict))
+        # features.append(blobs[layer_name][0,:,:,:].copy())
+    
+    print('Load %d images, cost %f seconds, average time: %f seconds' % (cnt_load_img, time_load_img, time_load_img/cnt_load_img))
+    print('Predict %d images, cost %f seconds, average time: %f seconds' % (cnt_predict, time_predict, time_predict/cnt_predict))
 
     features = np.asarray(features, dtype='float32')
     return features
@@ -235,18 +246,18 @@ def extract_features_to_mat(network_proto_path, network_model_path, data_mean,
     img_list, labels, img_list_original = load_image_list(image_dir, list_file)
     print img_list[0:10]
     print labels[0:10]
-    #exit()
+    # exit()
 
     float_labels = labels_list_to_float(labels)
 
 
     ftr = extract_feature(network_proto_path, network_model_path,
                           img_list, data_mean, layer_name, image_as_grey)
-    #print ftr.shape
+    # print ftr.shape
 #    if ftr.shape[3]==1 and ftr.shape[2]==1:
 #        ftr = ftr[:,:,0,0]
-    #print ftr.shape
-    #labels = np.asarray(labels, dtype='float32')
+    # print ftr.shape
+    # labels = np.asarray(labels, dtype='float32')
     float_labels = labels_list_to_float(labels)
     dic = {'features':ftr,
            'labels':float_labels,
@@ -306,8 +317,8 @@ extract_features_to_mat('DeepFace.prototxt', 'DeepFace_iter_30000',
 '''
 
 img_list = load_image_list('/home/wkira/share/data/MBGC64', 'caffe_110_list.txt')
-#print img_list
-#exit()
+# print img_list
+# exit()
 ftr = extract_feature('deep1.prototxt', 'deep1_iter_14000', img_list, None, 'ip1')
 '''
 
@@ -360,9 +371,9 @@ pickle(net_save_file, dic, compress=True)
 '''
 
 def save_filters(network_def, network_model, save_path):
-    #print 'arg1', network_def
-    #print 'arg2', network_model
-    #print 'arg3', save_path
+    # print 'arg1', network_def
+    # print 'arg2', network_model
+    # print 'arg3', save_path
     
     #--->added by zhaoyafei 2017-05-09
     caffe.set_phase_test()
@@ -393,8 +404,8 @@ def save_filters(network_def, network_model, save_path):
         vlist = [vt.data for vt in v]
         params.append((k, vlist))
 
-    #exit()
-    #params = [(k, v) for k, v in net.params.items()]
+    # exit()
+    # params = [(k, v) for k, v in net.params.items()]
     dc = dict(params)
     sio.savemat(save_path, dc)
 
@@ -439,8 +450,8 @@ def save_features(network_def, network_model, mean_file, img_path, save_path):
 
 def main(argv):
 
-    #print argv[0]
-    #print argv[0].lower()
+    # print argv[0]
+    # print argv[0].lower()
     if len(argv) == 0:
         print 'To extract features:'
         print '  Extracts features and saves to mat file.'
@@ -546,8 +557,8 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    #print  'main'
-    #print sys.argv
+    # print  'main'
+    # print sys.argv
     '''
     lbs = ['ad','dd','ewrer','sdfd', 'aaa']
     lbs = ['0', '1', '4', '56', '2']
