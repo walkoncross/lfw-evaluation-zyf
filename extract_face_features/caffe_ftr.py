@@ -61,7 +61,7 @@ def unpickle(filename):
 
 
 def load_image_list(img_dir, list_file_name):
-    list_file_path = os.path.join(img_dir, list_file_name)
+    #list_file_path = os.path.join(img_dir, list_file_name)
     f = open(list_file_path, 'r')
     image_fullpath_list = []
     image_list = []
@@ -222,7 +222,7 @@ def extract_feature(network_proto_path,
             # syncs the memory between GPU and CPU
             blobs = OrderedDict( [(k, v.data) for k, v in net.blobs.items()])
 
-            print 'predict %d images cost %f seconds, average time: %f seconds' % (len(img_batch), time_predict, time_predict/len(img_batch))
+            print 'predict %d images cost %f seconds, average time: %f seconds' % (cnt_predict, time_predict, time_predict/cnt_predict)
 
             print '%d images processed' % (cnt+1,)
 
