@@ -12,7 +12,7 @@ function result = evaluate(config, scores, gt)
         case 'roc'   
             [res, extra] = evaluation.roc.eval(config, scores, gt);
         case 'accuracy'    
-            [res, extra] = evaluation.accuracy.eval(config, scores, gt); 
+            [res, extra] = evaluation.accuracy.eval_best(config, scores, gt); 
     end
         
         % measure name
