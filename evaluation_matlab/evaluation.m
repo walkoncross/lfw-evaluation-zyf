@@ -3,6 +3,12 @@ clc
 % load('../results/LightenedCNN_A_lfw.mat');      % model A
 % load('../results/LightenedCNN_B_lfw.mat');      % model B
 %load('../results/LightenedCNN_C_lfw.mat');      % model C
+% load('../lfw_data/lfw_pairs.mat');
+
+% load('C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW_Feature.mat');
+% features = feature';
+% load('../lfw_data/lfw_pairs_wyd.mat');
+
 load('C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/center_face_model_fixbug.mat');
 % load('C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/face_snapshot_0504_val0.15_iter_28000_fixbug.mat');
 % load('C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/face_snapshot_0505_val0.1_iter_28000_fixbug.mat');
@@ -17,8 +23,7 @@ load('C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/center_face_mode
 % load('C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-aligned-96x112_0504_val0.15_iter_28000.mat');
 
 
-%load('lfw_pairs.mat');
-load('lfw_pairs_zyf.mat');
+load('../lfw_data/lfw_pairs_zyf.mat');
 
 % pos
 for i = 1: length(pos_pair)

@@ -1,7 +1,7 @@
 %img_root_dir = 'C:/datasets/lfw-aligned/'
 
-list_file = './lfw_list_mtcnn.txt';
-pairs_file = './lfw_pairs.txt'
+list_file = '../lfw_data/lfw_list_mtcnn.txt';
+pairs_file = '../lfw_data/lfw_pairs.txt'
 
 % read list_file into list_imgs and list_ids
 fid = fopen(list_file);

@@ -62,7 +62,7 @@ def unpickle(filename):
 
 def load_image_list(img_dir, list_file_name):
     #list_file_path = os.path.join(img_dir, list_file_name)
-    f = open(list_file_path, 'r')
+    f = open(list_file_name, 'r')
     image_fullpath_list = []
     image_list = []
     labels = []
@@ -234,7 +234,7 @@ def extract_feature(network_proto_path,
             img_batch = []
 
         # features.append(blobs[layer_name][0,:,:,:].copy())
-    
+
     print('Load %d images, cost %f seconds, average time: %f seconds' % (cnt_load_img, time_load_img, time_load_img/cnt_load_img))
     print('Predict %d images, cost %f seconds, average time: %f seconds' % (cnt_predict, time_predict, time_predict/cnt_predict))
 
@@ -374,7 +374,7 @@ def save_filters(network_def, network_model, save_path):
     # print 'arg1', network_def
     # print 'arg2', network_model
     # print 'arg3', save_path
-    
+
     #--->added by zhaoyafei 2017-05-09
     caffe.set_phase_test()
     caffe.set_mode_cpu()
@@ -427,7 +427,7 @@ def save_features(network_def, network_model, mean_file, img_path, save_path):
     net = caffe.Classifier(network_def, network_model, None, data_mean, 0.0078125, 255, (2,1,0))
 #    net = caffe.Classifier(network_def, network_model, None, data_mean, 2.0, 1.0, (2,1,0))
     #--->end added by zhaoyafei 2017-05-09
-    
+
     #--->commented by zhaoyafei 2017-05-09
 #    net = caffe.Classifier(network_def, network_model)
 #    net.set_phase_test()

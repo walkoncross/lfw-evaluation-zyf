@@ -108,7 +108,7 @@ def parse_arguments(argv):
                         default='cosine')
     parser.add_argument('--lfw_pairs_mat_file', type=str,
                         help='The file containing the pairs to use for validation.',
-                        default='./lfw_pairs_zyf.mat')
+                        default='../lfw_data/lfw_pairs_zyf.mat')
     parser.add_argument('--lfw_nrof_folds', type=int,
                         help='Number of folds to use for cross validation. Mainly used for testing.',
                         default=10)
@@ -123,6 +123,7 @@ def parse_arguments(argv):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
+#        ftr_path = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW_Feature.mat'
         ftr_path = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/center_face_model_fixbug.mat'
 #        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/face_snapshot_0504_val0.15_iter_28000_fixbug.mat'
 #        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/face_snapshot_0505_val0.1_iter_28000_fixbug.mat'

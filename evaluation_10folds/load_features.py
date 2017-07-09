@@ -25,7 +25,16 @@ def load_mat_features(data_mat_file, pairs_mat_file,
     assert(pos_pairs.shape[1] == nrof_features_per_fold * nrof_kfolds)
     assert(neg_pairs.shape[1] == nrof_features_per_fold * nrof_kfolds)
 
-    features = data['features']
+#    print data
+
+    if 'features' in data:
+        features = data['features']
+    elif 'feature' in data:
+        features = data['feature']
+        features = features.T
+    else:
+        raise Exception('Counld not find keyword "feature" or "features" in .mat file')
+
 #    print "features.shape: ", features.shape
 
     pos_ind_1 = pos_pairs[0].reshape(nrof_kfolds, nrof_features_per_fold)
