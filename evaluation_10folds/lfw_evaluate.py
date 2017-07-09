@@ -29,24 +29,92 @@ from __future__ import print_function
 
 import os
 import numpy as np
-import calc_roc
+import roc
 
 
-def evaluate(embeddings, actual_issame, nrof_folds=10):
-    # Calculate evaluation metrics
-    thresholds = np.arange(0, 4, 0.01)
-    embeddings1 = embeddings[0]
-    embeddings2 = embeddings[1]
-    print('embeddings1.shape: {}'.format(embeddings1.shape))
-    print('embeddings2.shape: {}'.format(embeddings2.shape))
+def calc_distance(features1, features2, distance='cosine'):
+    print('calc_distance: using {} distance'.format(distance))
 
-    tpr, fpr, accuracy = calc_roc.calculate_roc(thresholds, embeddings1, embeddings2,
-                                                np.asarray(actual_issame),
-                                                nrof_folds=nrof_folds)
-    thresholds = np.arange(0, 4, 0.001)
-    val, val_std, far = calc_roc.calculate_val(thresholds, embeddings1, embeddings2,
-                                               np.asarray(actual_issame), 1e-3, 
-                                               nrof_folds=nrof_folds)
+    # consinde distance = 1 - (emb1/norm(emb1))*(emb2/norm(emb2)).T
+    if distance == 'cosine':
+        tmp = features1 * features2
+        dist = 1 - np.sum(tmp, 1)
+    else:  # default 'squared' distance=diff^2
+        diff = np.subtract(features1, features2)
+        dist = np.sum(np.square(diff), 1)
+
+#    print 'dist.shape: ', dist.shape
+
+    return dist
+
+
+def lfw_evaluate(features, actual_issame, distance):
+    # calc evaluation metrics
+    #    print('Using: {} distance'.format(distance))
+
+    if distance == 'cosine':
+        max_thresh = 1.0
+        thresh_step = 0.00025
+    else:
+        max_thresh = 4.0
+        thresh_step = 0.001
+
+#    thresholds = np.arange(0, max_thresh, thresh_step)
+    thresholds = None
+
+    features1 = features[0]
+    features2 = features[1]
+
+#    print('features1.shape: {}'.format(features1.shape))
+#    print('features2.shape: {}'.format(features2.shape))
+
+    dist = calc_distance(features1, features2, distance)
+
+    tpr, fpr, best_accuracy = roc.calc_roc(thresholds,
+                                           dist,
+                                           actual_issame)
+
+#    thresholds = np.arange(0, max_thresh, thresh_step)
+
+    val_far = roc.calc_val(thresholds,
+                           dist,
+                           actual_issame
+                           )
+    return tpr, fpr, best_accuracy, val_far
+
+
+def lfw_evaluate_kfolds(features, actual_issame, distance, nrof_folds=10):
+    # calc evaluation metrics
+    #    print('Using: {} distance'.format(distance))
+
+    if distance == 'cosine':
+        max_thresh = 1.0
+        thresh_step = 0.00025
+    else:
+        max_thresh = 4.0
+        thresh_step = 0.001
+
+#    thresholds = np.arange(0, max_thresh, thresh_step)
+    thresholds = None
+
+    features1 = features[0]
+    features2 = features[1]
+
+#    print('features1.shape: {}'.format(features1.shape))
+#    print('features2.shape: {}'.format(features2.shape))
+#
+    dist = calc_distance(features1, features2, distance)
+
+    tpr, fpr, accuracy = roc.calc_roc_kfolds(thresholds,
+                                             dist,
+                                             actual_issame)
+
+#    thresholds = np.arange(0, max_thresh, thresh_step)
+
+    val, val_std, far = roc.calc_val_kfolds(thresholds,
+                                            dist,
+                                            actual_issame,
+                                            1e-3)
     return tpr, fpr, accuracy, val, val_std, far
 
 
