@@ -222,8 +222,6 @@ def extract_feature(network_proto_path,
         if (n_imgs == batch_size) or cnt == features_shape[0] - 1:
             t1 = time.clock()
             if PLUS_MIRROR:
-                new_shape =
-                net.blobs['data'].reshape()
                 for i in range(n_imgs):
                     mirror_img = np.fliplr(img_batch[i])
                     img_batch.append(mirror_img)
