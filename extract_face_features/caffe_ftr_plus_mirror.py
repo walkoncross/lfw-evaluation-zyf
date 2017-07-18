@@ -166,7 +166,7 @@ def extract_feature(network_proto_path,
 
     # blobs = OrderedDict( [(k, v.data) for k, v in net.blobs.items()])
     input_shape = blobs['data'].shape
-    batch_size = input_shape.shape[0]
+    batch_size = input_shape[0]
     print 'original input data shape: ', input_shape
     print 'original batch_size: ', batch_size
     
