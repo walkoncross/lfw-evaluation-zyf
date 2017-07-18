@@ -216,7 +216,7 @@ def extract_feature(network_proto_path,
         if (n_imgs == batch_size) or cnt == features_shape[0] - 1:
             t1 = time.clock()
             if PLUS_MIRROR:
-                for i in rang(n_imgs):
+                for i in range(n_imgs):
                     mirror_img = np.fliplr(img_batch[i])
                     img_batch.append(mirror_img)
 
@@ -245,7 +245,8 @@ def extract_feature(network_proto_path,
             # syncs the memory between GPU and CPU
             blobs = OrderedDict([(k, v.data) for k, v in net.blobs.items()])
 
-            print 'predict %d images cost %f seconds, average time: %f seconds' % (cnt_predict, time_predict, time_predict / cnt_predict)
+            print 'predict %d images cost %f seconds, average time: %f seconds' % (cnt_predict, 
+                    time_predict, time_predict / cnt_predict)
 
             print '%d images processed' % (cnt + 1,)
 
@@ -253,9 +254,9 @@ def extract_feature(network_proto_path,
             # items of blobs are references, must make copy!
             # features[cnt-n_imgs+1:cnt+1, :,:,:] = blobs[layer_name][0:n_imgs,:,:,:].copy()
             # features[cnt-n_imgs+1:cnt+1, :] = blobs[layer_name][0:n_imgs,:].copy()
-            ftrs = blobs[layer_name][0:n_imgs, ...]
 
             if PLUS_MIRROR:
+                ftrs = blobs[layer_name][0:n_imgs*2, ...]
                 # if MIRROR_COMBINE_METHOD is 'elt_max':
                 #     comb_ftrs = np.maximum(ftrs[:n_imgs], ftrs[n_imgs:])
                 # else:
@@ -274,6 +275,7 @@ def extract_feature(network_proto_path,
 
             else:
                 # features[cnt-n_imgs+1:cnt+1, ...] = blobs[layer_name][0:n_imgs, ...].copy()
+                ftrs = blobs[layer_name][0:n_imgs, ...]
                 features[cnt - n_imgs + 1:cnt + 1, ...] = ftrs.copy()
 
             img_batch = []
