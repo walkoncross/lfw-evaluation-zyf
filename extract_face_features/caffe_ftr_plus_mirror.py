@@ -19,6 +19,7 @@ import numpy as np
 import scipy.io as sio
 import skimage.io
 import os
+import os.path as osp
 
 import time
 
@@ -272,7 +273,7 @@ def extract_feature(network_proto_path,
             # ftrs = blobs[layer_name]
 
             if PLUS_MIRROR:
-                ftrs = blobs[layer_name][0:n_imgs*2, ...]
+                ftrs = blobs[layer_name][0:n_imgs * 2, ...]
                 # if MIRROR_COMBINE_METHOD is 'elt_max':
                 #     comb_ftrs = np.maximum(ftrs[:n_imgs], ftrs[n_imgs:])
                 # else:
