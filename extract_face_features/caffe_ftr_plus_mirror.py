@@ -28,6 +28,10 @@ import sys
 sys.path.insert(0, caffe_root + 'python')
 import caffe
 
+PLUS_MIRROR = True
+# MIRROR_COMBINE_METHOD = 'elt-max'
+# MIRROR_COMBINE_METHOD = 'elt-avg'
+
 
 class UnpickleError(Exception):
     pass
@@ -174,6 +178,12 @@ def extract_feature(network_proto_path,
     # features_shape = (len(image_list), shp[1])
     features_shape = (len(image_list),) + shp[1:]
     features = np.empty(features_shape, dtype='float32', order='C')
+    if PLUS_MIRROR:
+        features_mirror_eltmax = np.empty(
+            features_shape, dtype='float32', order='C')
+        features_mirror_eltavg = np.empty(
+            features_shape, dtype='float32', order='C')
+
     img_batch = []
 
     cnt_load_img = 0
@@ -185,6 +195,7 @@ def extract_feature(network_proto_path,
     for cnt, path in zip(range(features_shape[0]), image_list):
         t1 = time.clock()
         img = caffe.io.load_image(path, color=not image_as_grey)
+
         if image_as_grey and img.shape[2] != 1:
             img = skimage.color.rgb2gray(img)
             img = img[:, :, np.newaxis]
@@ -204,6 +215,11 @@ def extract_feature(network_proto_path,
         # print path, type(img), img.mean()
         if (n_imgs == batch_size) or cnt == features_shape[0] - 1:
             t1 = time.clock()
+            if PLUS_MIRROR:
+                for i in rang(n_imgs):
+                    mirror_img = np.fliplr(img_batch[i])
+                    img_batch.append(mirror_img)
+
             scores = net.predict(img_batch, oversample=False)
             t2 = time.clock()
             time_predict += (t2 - t1)
@@ -238,7 +254,28 @@ def extract_feature(network_proto_path,
             # features[cnt-n_imgs+1:cnt+1, :,:,:] = blobs[layer_name][0:n_imgs,:,:,:].copy()
             # features[cnt-n_imgs+1:cnt+1, :] = blobs[layer_name][0:n_imgs,:].copy()
             ftrs = blobs[layer_name][0:n_imgs, ...]
-            features[cnt - n_imgs + 1:cnt + 1, ...] = ftrs.copy()
+
+            if PLUS_MIRROR:
+                # if MIRROR_COMBINE_METHOD is 'elt_max':
+                #     comb_ftrs = np.maximum(ftrs[:n_imgs], ftrs[n_imgs:])
+                # else:
+                #     comb_ftrs = (ftrs[:n_imgs] + ftrs[n_imgs:]) * 0.5
+                # features_mirror_eltmax[cnt - n_imgs + 1:cnt + 1, ...] = comb_ftrs
+
+                eltmax_ftrs = np.maximum(ftrs[:n_imgs], ftrs[n_imgs:])
+                eltavg_ftrs = (ftrs[:n_imgs] + ftrs[n_imgs:]) * 0.5
+
+                features[cnt - n_imgs + 1:cnt +
+                         1, ...] = ftrs[:n_imgs, ...].copy()
+                features_mirror_eltmax[cnt - n_imgs +
+                                       1:cnt + 1, ...] = eltmax_ftrs
+                features_mirror_eltavg[cnt - n_imgs +
+                                       1:cnt + 1, ...] = eltavg_ftrs
+
+            else:
+                # features[cnt-n_imgs+1:cnt+1, ...] = blobs[layer_name][0:n_imgs, ...].copy()
+                features[cnt - n_imgs + 1:cnt + 1, ...] = ftrs.copy()
+
             img_batch = []
 
         # features.append(blobs[layer_name][0,:,:,:].copy())
@@ -249,7 +286,14 @@ def extract_feature(network_proto_path,
           (cnt_predict, time_predict, time_predict / cnt_predict))
 
     features = np.asarray(features, dtype='float32')
-    return features
+    if PLUS_MIRROR:
+        features_mirror_eltmax = np.asarray(
+            features_mirror_eltmax, dtype='float32')
+        features_mirror_eltavg = np.asarray(
+            features_mirror_eltavg, dtype='float32')
+        return [features, features_mirror_eltmax, features_mirror_eltavg]
+    else:
+        return [features]
 
 
 def extract_features_to_mat(network_proto_path,
@@ -267,19 +311,36 @@ def extract_features_to_mat(network_proto_path,
 
     float_labels = labels_list_to_float(labels)
 
-    ftr = extract_feature(network_proto_path, network_model_path,
-                          img_list, data_mean, layer_name, image_as_grey)
+    ftrs = extract_feature(network_proto_path,
+                           network_model_path,
+                           img_list,
+                           data_mean,
+                           layer_name,
+                           image_as_grey)
     # print ftr.shape
 #    if ftr.shape[3]==1 and ftr.shape[2]==1:
 #        ftr = ftr[:,:,0,0]
     # print ftr.shape
     # labels = np.asarray(labels, dtype='float32')
     float_labels = labels_list_to_float(labels)
-    dic = {'features': ftr,
+
+    dic = {'features': ftrs[0],
            'labels': float_labels,
            'labels_original': string_list_to_cells(labels),
            'image_path': string_list_to_cells(img_list_original)}
     sio.savemat(save_path, dic)
+
+    if len(ftrs) > 1:
+        splits = osp.splitext(save_path)
+        save_path2 = splits[0] + '_mirror_eltmax' + splits[1]
+        save_path3 = splits[0] + '_mirror_eltavg' + splits[1]
+
+        dic['features'] = ftrs[1]
+        sio.savemat(save_path2, dic)
+
+        dic['features'] = ftrs[2]
+        sio.savemat(save_path3, dic)
+
     return
 
 
@@ -447,7 +508,8 @@ def save_features(network_def, network_model, mean_file, img_path, save_path):
 #    caffe.set_device(2)
 #    net = caffe.Classifier(network_def, network_model, None, data_mean, None, None, (2,1,0))
     net = caffe.Classifier(network_def, network_model,
-                           None, data_mean, 0.0078125, 255, (2, 1, 0))
+                           None, data_mean,
+                           0.0078125, 255, (2, 1, 0))
 #    net = caffe.Classifier(network_def, network_model, None, data_mean, 2.0, 1.0, (2,1,0))
     #--->end added by zhaoyafei 2017-05-09
 
