@@ -161,11 +161,13 @@ def extract_feature(network_proto_path,
     blobs = OrderedDict([(k, v.data) for k, v in net.blobs.items()])
 
     # blobs = OrderedDict( [(k, v.data) for k, v in net.blobs.items()])
+    input_shape = blobs['data'].shape
+    batch_size = input_shape.shape[0]
+    print 'original input data shape: ', input_shape
+    print 'original batch_size: ', batch_size
+	
     shp = blobs[layer_name].shape
-    print blobs['data'].shape
-
-    batch_size = blobs['data'].shape[0]
-    print blobs[layer_name].shape
+    print 'feature map shape: ', shp
     # print 'debug-------\nexit'
     # exit()
 
@@ -198,11 +200,10 @@ def extract_feature(network_proto_path,
         cnt_load_img += 1
         time_predict += (t2 - t1)
 
-        n_imgs = len(img_batch)
-
         # print 'image shape: ', img.shape
         # print path, type(img), img.mean()
-        if (n_imgs == batch_size) or cnt == features_shape[0] - 1:
+        if (len(img_batch) == batch_size) or cnt == features_shape[0] - 1:
+            n_imgs = len(img_batch)
             t1 = time.clock()
             scores = net.predict(img_batch, oversample=False)
             t2 = time.clock()
@@ -267,8 +268,12 @@ def extract_features_to_mat(network_proto_path,
 
     float_labels = labels_list_to_float(labels)
 
-    ftr = extract_feature(network_proto_path, network_model_path,
-                          img_list, data_mean, layer_name, image_as_grey)
+    ftr = extract_feature(network_proto_path,
+                           network_model_path,
+                           img_list,
+                           data_mean,
+                           layer_name,
+                           image_as_grey)
     # print ftr.shape
 #    if ftr.shape[3]==1 and ftr.shape[2]==1:
 #        ftr = ftr[:,:,0,0]
@@ -447,7 +452,8 @@ def save_features(network_def, network_model, mean_file, img_path, save_path):
 #    caffe.set_device(2)
 #    net = caffe.Classifier(network_def, network_model, None, data_mean, None, None, (2,1,0))
     net = caffe.Classifier(network_def, network_model,
-                           None, data_mean, 0.0078125, 255, (2, 1, 0))
+                           None, data_mean,
+                           0.0078125, 255, (2, 1, 0))
 #    net = caffe.Classifier(network_def, network_model, None, data_mean, 2.0, 1.0, (2,1,0))
     #--->end added by zhaoyafei 2017-05-09
 

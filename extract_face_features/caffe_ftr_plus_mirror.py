@@ -166,16 +166,19 @@ def extract_feature(network_proto_path,
 
     # blobs = OrderedDict( [(k, v.data) for k, v in net.blobs.items()])
     input_shape = blobs['data'].shape
+    batch_size = input_shape.shape[0]
     print 'original input data shape: ', input_shape
+    print 'original batch_size: ', batch_size
+    
     if PLUS_MIRROR:
-        new_input_shape = (input_shape[0]*2, ) + input_shape[1:]
+        batch_size /= 2
+        new_input_shape = (input_shape[0]/2, ) + input_shape[1:]
         blobs['data'].reshape(new_input_shape)
         print 'reshape input data into for mirror eval: ', blobs['data'].shape
+        print 'new batch_size: ', batch_size
 
     shp = blobs[layer_name].shape
-
-    batch_size = blobs['data'].shape[0]
-    print blobs[layer_name].shape
+    print 'feature map shape: ', shp
     # print 'debug-------\nexit'
     # exit()
 
@@ -215,11 +218,10 @@ def extract_feature(network_proto_path,
         cnt_load_img += 1
         time_predict += (t2 - t1)
 
-        n_imgs = len(img_batch)
-
         # print 'image shape: ', img.shape
         # print path, type(img), img.mean()
-        if (n_imgs == batch_size) or cnt == features_shape[0] - 1:
+        if (len(img_batch) == batch_size) or cnt == features_shape[0] - 1:
+            n_imgs = len(img_batch)
             t1 = time.clock()
             if PLUS_MIRROR:
                 for i in range(n_imgs):
