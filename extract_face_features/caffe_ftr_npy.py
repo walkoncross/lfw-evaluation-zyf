@@ -9,14 +9,14 @@
 # Licence:     <your licence>
 #-------------------------------------------------------------------------
 
-import time
+import os
+import os.path as osp
 
 import numpy as np
 #import scipy.io as sio
 import skimage.io
 
-import os
-import os.path as osp
+from collections import OrderedDict
 
 import time
 
