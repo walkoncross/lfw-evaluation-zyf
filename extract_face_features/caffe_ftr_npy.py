@@ -260,9 +260,10 @@ def extract_features_to_npy(network_proto_path,
 def print_usage():
     print 'To extract features:'
     print '  Extract features and save each feature into a .npy file.'
-    print '  Usage: python caffe_ftr.py network_def trained_model image_dir image_list_file layer_name '
+    print '  Usage: python caffe_ftr.py network_def trained_model mean_file image_dir image_list_file layer_name save_path'
     print '    network_def: network definition prototxt file'
     print '    trained_model: trained network model file, such as deep_iter_10000'
+    print '    mean_file: If no mean file used, use -nomean as mean_file. mean_file should be numpy saved file (.npy).'  
     print '    image_dir: the root dir of images'
     print '    image_list_file: a txt file, each line contains an image file path relative to image_dir and a label, seperated by space'
     print '    layer_name: name of the layer, whose outputs will be extracted'
@@ -271,13 +272,16 @@ def print_usage():
 
 def main(argv):
 
-    if len(argv) < 6:
+    if len(argv) < 7:
         print_usage()
         exit()
+
+    if cmp(argv[3].lower(), '-nomean') == 0:
+        argv[3] = None
         
     start_time = time.time()
     extract_features_to_npy(
-        argv[0], argv[1], None, argv[2], argv[3], argv[4], argv[5])
+        argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6])
     end_time = time.time()
     print 'time used: %f s\n' % (end_time - start_time,)
 
