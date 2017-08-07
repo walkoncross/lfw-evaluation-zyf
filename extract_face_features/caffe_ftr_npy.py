@@ -35,12 +35,12 @@ def load_image_list(img_dir, list_file_name):
     for line in f:
         if line.startswith('#'):
             continue
-            
+
         items = line.split()
         image_fullpath_list.append(os.path.join(img_dir, items[0].strip()))
-    
+
     f.close()
-    
+
     return image_fullpath_list
 
 
@@ -135,7 +135,7 @@ def extract_feature(network_proto_path,
     batch_size = input_shape[0]
     print 'original input data shape: ', input_shape
     print 'original batch_size: ', batch_size
-	
+
     shp = blobs[layer_name].shape
     print 'feature map shape: ', shp
     # print 'debug-------\nexit'
@@ -222,7 +222,7 @@ def extract_feature(network_proto_path,
     features = np.asarray(features, dtype='float32')
     return features
 
-    
+
 def extract_features_to_npy(network_proto_path,
                             network_model_path,
                             data_mean,
@@ -231,7 +231,7 @@ def extract_features_to_npy(network_proto_path,
                             layer_name,
                             save_path,
                             image_as_grey=False):
-                            
+
     img_list = load_image_list(image_dir, list_file)
     print img_list[0:10]
     # exit()
@@ -244,7 +244,7 @@ def extract_features_to_npy(network_proto_path,
                            layer_name,
                            image_as_grey)
 
-                           
+
     if not osp.exists(save_path):
         os.makedirs(save_path)
 
@@ -253,17 +253,17 @@ def extract_features_to_npy(network_proto_path,
         base_name = osp.splitext(base_name)[0]
         save_name = osp.join(save_path, base_name + '_feat.npy')
         np.save(save_name, ftrs[i])
-        
+
     return
 
-    
+
 def print_usage():
     print 'To extract features:'
     print '  Extract features and save each feature into a .npy file.'
     print '  Usage: python caffe_ftr.py network_def trained_model mean_file image_dir image_list_file layer_name save_path'
     print '    network_def: network definition prototxt file'
     print '    trained_model: trained network model file, such as deep_iter_10000'
-    print '    mean_file: If no mean file used, use -nomean as mean_file. mean_file should be numpy saved file (.npy).'  
+    print '    mean_file: If no mean file used, use -nomean as mean_file. mean_file should be numpy saved file (.npy).'
     print '    image_dir: the root dir of images'
     print '    image_list_file: a txt file, each line contains an image file path relative to image_dir and a label, seperated by space'
     print '    layer_name: name of the layer, whose outputs will be extracted'
@@ -278,7 +278,7 @@ def main(argv):
 
     if cmp(argv[3].lower(), '-nomean') == 0:
         argv[3] = None
-        
+
     start_time = time.time()
     extract_features_to_npy(
         argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6])
@@ -287,5 +287,32 @@ def main(argv):
 
 
 if __name__ == '__main__':
+    if len(sys.argv)==1:
+        ###centerface
+#        network_def = r'C:\zyf\dnn_models\face_models\centerloss\center_face_deploy.prototxt'
+#        trained_model = r'C:\zyf\dnn_models\face_models\centerloss\center_face_model.caffemodel'
+#        mean_file = r'C:\zyf\dnn_models\face_models\centerloss\center_face_mean_127.5_1x3.npy'
+#        layer_name = 'fc5'
 
-    main(sys.argv[1:])
+        ###normface (not work, because 'Flip' layer is not defined in BVLC caffe)
+#        network_def = r'C:\zyf\dnn_models\face_models\norm_face\Center_Face_99.2\face_deploy.prototxt'
+#        trained_model = r'C:\zyf\dnn_models\face_models\norm_face\Center_Face_99.2\face_train_test_iter_6000.caffemodel'
+#        mean_file = r'C:\zyf\dnn_models\face_models\centerloss\center_face_mean_127.5_1x3.npy'
+#        layer_name = 'eltmax_fc5'
+
+        ###sphereface
+        network_def = r'C:\zyf\dnn_models\face_models\centerloss\center_face_deploy.prototxt'
+        trained_model = r'C:\zyf\dnn_models\face_models\\sphere_face_cwl\sphereface_iter_22000.caffemodel'
+        mean_file = r'C:\zyf\dnn_models\face_models\centerloss\center_face_mean_127.5_1x3.npy'
+        layer_name = 'fc5'
+
+        image_dir = r'./face_chips'
+        image_list_file = r'face_chips\face_chips_list.txt'
+        save_path = 'extracted_features'
+        argv = [network_def, trained_model, mean_file,
+                image_dir, image_list_file,
+                layer_name, save_path]
+        main(argv)
+    else:
+        main(sys.argv[1:])
+

@@ -1,0 +1,5 @@
+face_chip_2_1.png
+face_chip_2_4.png
+face_chip_3_1.png
+face_chip_3_2.png
+face_chip_zzy.png
