@@ -302,13 +302,16 @@ if __name__ == '__main__':
 
         ###sphereface
         network_def = r'C:\zyf\dnn_models\face_models\centerloss\center_face_deploy.prototxt'
-        trained_model = r'C:\zyf\dnn_models\face_models\\sphere_face_cwl\sphereface_iter_22000.caffemodel'
+#        trained_model = r'C:\zyf\dnn_models\face_models\\sphere_face_cwl\sphereface_iter_22000.caffemodel'
+        trained_model = r'C:\zyf\dnn_models\face_models\\sphere_face\sphereface_model_iter_28000_bs512.caffemodel'
         mean_file = r'C:\zyf\dnn_models\face_models\centerloss\center_face_mean_127.5_1x3.npy'
         layer_name = 'fc5'
 
-        image_dir = r'./face_chips'
-        image_list_file = r'face_chips\face_chips_list.txt'
-        save_path = 'extracted_features'
+#        image_dir = r'./face_chips'
+#        image_list_file = r'face_chips\face_chips_list.txt'
+        image_dir = r'C:\zyf\github\mtcnn-caffe-good\face_aligner\face_chips'
+        image_list_file = r'face_chips\face_chips_list_2.txt'
+        save_path = 'extracted_features_2'
         argv = [network_def, trained_model, mean_file,
                 image_dir, image_list_file,
                 layer_name, save_path]

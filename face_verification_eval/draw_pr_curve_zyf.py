@@ -237,7 +237,7 @@ def calc_roc_and_pr(same_pairs_result_file, diff_pairs_result_file, threshs=None
     return tp, fn, tn, fp
 
 
-def draw_analysis_figure(tp, fn, tn, fp, save_dir='./'):
+def draw_analysis_figure(tp, fn, tn, fp, save_dir='./', draw_balanced_pr=False):
     if not osp.exists(save_dir):
         os.makedirs(save_dir)
 
@@ -272,37 +272,38 @@ def draw_analysis_figure(tp, fn, tn, fp, save_dir='./'):
     plt.show()
     plt.savefig(osp.join(save_dir, fname_roc_img))
 
-    balanced_precision = tp / (tp + fp / 3.1)
+	if draw_balanced_pr:
+		balanced_precision = tp / (tp + fp / 3.1)
 
-#    fp_pr = open(fname_balanced_pr, "w")
-#
-#    fp_pr.write("thresh\t presicion\t recall\n")
-#    for i in range(num_threshs):
-#        fp_pr.write("%f\t %f\t %f\n" % (threshs[i], balanced_precision[i], recall[i]))
-#
-#    fp_pr.close()
+		#    fp_pr = open(fname_balanced_pr, "w")
+		#
+		#    fp_pr.write("thresh\t presicion\t recall\n")
+		#    for i in range(num_threshs):
+		#        fp_pr.write("%f\t %f\t %f\n" % (threshs[i], balanced_precision[i], recall[i]))
+		#
+		#    fp_pr.close()
 
-#    fp_roc = open(fname_roc, "w")
-#
-#    fp_roc.write("thresh\t tp\t fn\t tn\t fp\t tpr\t \tfpr\n")
-#    for i in range(num_threshs):
-#        fp_roc.write("%f\t %d\t %d\t %d\t %d\t %f\t %f\n" % (threshs[i], tp[i], fn[i], tn[i], fp[i], recall[i], fpr[i]))
-#
-#    fp_roc.close()
+		#    fp_roc = open(fname_roc, "w")
+		#
+		#    fp_roc.write("thresh\t tp\t fn\t tn\t fp\t tpr\t \tfpr\n")
+		#    for i in range(num_threshs):
+		#        fp_roc.write("%f\t %d\t %d\t %d\t %d\t %f\t %f\n" % (threshs[i], tp[i], fn[i], tn[i], fp[i], recall[i], fpr[i]))
+		#
+		#    fp_roc.close()
 
-    print "Draw balanced PR curve"
-    plt.figure(3)
-    plt.plot(recall, balanced_precision)
+		print "Draw balanced PR curve"
+		plt.figure(3)
+		plt.plot(recall, balanced_precision)
 
-    plt.xticks(np.arange(0, 1.1, 0.1))
-    plt.yticks(np.arange(0, 1.1, 0.1))
-    plt.title('Balanced-Precision vs. Recall Curve')
-    plt.xlabel('Recall')
-    plt.ylabel('Precision')
-    plt.grid(which='both', color='r', linestyle='--', linewidth=1)
-    plt.show()
+		plt.xticks(np.arange(0, 1.1, 0.1))
+		plt.yticks(np.arange(0, 1.1, 0.1))
+		plt.title('Balanced-Precision vs. Recall Curve')
+		plt.xlabel('Recall')
+		plt.ylabel('Precision')
+		plt.grid(which='both', color='r', linestyle='--', linewidth=1)
+		plt.show()
 
-    plt.savefig(osp.join(save_dir, fname_balanced_pr_img))
+		plt.savefig(osp.join(save_dir, fname_balanced_pr_img))
 
 
 if __name__ == "__main__":

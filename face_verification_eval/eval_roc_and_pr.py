@@ -84,7 +84,7 @@ def eval_roc_and_pr(argv):
     threshs = None
     tp, fn, tn, fp = calc_roc(same_sim_list, diff_sim_list, threshs, save_dir)
     calc_presicion_recall(tp, fn, tn, fp, threshs, save_dir)
-    draw_analysis_figure(tp, fn, tn, fp, save_dir)
+    draw_analysis_figure(tp, fn, tn, fp, save_dir, True)
 
 
 def parse_arguments(argv):
@@ -112,10 +112,10 @@ def parse_arguments(argv):
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         #        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-aligned-96x112_center_face_model_orig.mat'
-        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-aligned-96x112_0504_val0.15_iter_28000.mat'
+        ftr_path = 'C:/zyf/dnn_models/face_models/lfw_eval_results/LFW-mtcnn-simaligned-96x112_center_face_model_orig.mat'
 #        ftr_path = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-simaligned-96x112_center_face_model_orig.mat'
-        same_pairs_file = './test_pairs_same.txt'
-        diff_pairs_file = './test_pairs_diff.txt'
+        same_pairs_file = '../lfw_data/test_pairs_same.txt'
+        diff_pairs_file = '../lfw_data/test_pairs_diff.txt'
 
         save_dir = './eval_rlt'
         distance = 'cosine'

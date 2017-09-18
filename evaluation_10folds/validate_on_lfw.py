@@ -124,7 +124,7 @@ def parse_arguments(argv):
 if __name__ == '__main__':
     if len(sys.argv) < 2:
 #        ftr_path = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW_Feature.mat'
-        ftr_path = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/center_face_model_fixbug.mat'
+#        ftr_path = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/center_face_model_fixbug.mat'
 #        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/face_snapshot_0504_val0.15_iter_28000_fixbug.mat'
 #        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/face_snapshot_0505_val0.1_iter_28000_fixbug.mat'
 #        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/face_snapshot_0505_val0.1_iter_50000_fixbug.mat'
@@ -135,7 +135,8 @@ if __name__ == '__main__':
 #        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/lfw-ftr-nowarp-224x224_vgg-face.mat'
 #
 #        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-aligned-96x112_center_face_model_orig.mat'
-#        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-aligned-96x112_0504_val0.15_iter_28000.mat'
+        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-aligned-96x112_0504_val0.15_iter_28000.mat'
+#        ftr_path = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-simaligned-96x112_center_face_model_orig.mat'
 
         distance = 'cosine'
         draw_roc = 0
