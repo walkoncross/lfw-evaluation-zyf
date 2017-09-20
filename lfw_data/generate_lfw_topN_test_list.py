@@ -54,9 +54,15 @@ def main():
             if cls_cnt<2:
                 fp_gallery.write('%s %d %d\n' % (img_list[base_idx], base_idx, id_list[base_idx]) )
             else:
-                prob_idx = random.randint(0, cls_cnt - 1)
+#                prob_idx = random.randint(0, cls_cnt - 1)
+#                for j in range(cls_cnt):
+#                    if j==prob_idx:
+#                        fp_probe.write('%s %d %d\n' % (img_list[base_idx+j], base_idx+j, id_list[base_idx+j]) )
+#                    else:
+#                        fp_gallery.write('%s %d %d\n' % (img_list[base_idx+j], base_idx+j, id_list[base_idx+j]) )
+                gallery_idx = random.randint(0, cls_cnt - 1)
                 for j in range(cls_cnt):
-                    if j==prob_idx:
+                    if j!=gallery_idx:
                         fp_probe.write('%s %d %d\n' % (img_list[base_idx+j], base_idx+j, id_list[base_idx+j]) )
                     else:
                         fp_gallery.write('%s %d %d\n' % (img_list[base_idx+j], base_idx+j, id_list[base_idx+j]) )

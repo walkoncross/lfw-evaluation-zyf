@@ -194,12 +194,12 @@ if __name__ == '__main__':
         ftr_path = 'C:/zyf/dnn_models/face_models/lfw_eval_results/LFW-mtcnn-simaligned-96x112_center_face_model_orig.mat'
 #        ftr_path = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-simaligned-96x112_center_face_model_orig.mat'
 
-#        gallery_list_file = '../lfw_data/test_ident_gallery.txt'
-#        probe_list_file = '../lfw_data/test_ident_probe.txt'
-#        save_dir = './eval_rlt'
-        gallery_list_file = '../lfw_data/test_ident_gallery_full_list.txt'
-        probe_list_file = '../lfw_data/test_ident_probe_full_list.txt'
-        save_dir = './eval_rlt_lfw_full_list'
+        gallery_list_file = '../lfw_data/test_ident_gallery.txt'
+        probe_list_file = '../lfw_data/test_ident_probe.txt'
+        save_dir = './eval_rlt'
+#        gallery_list_file = '../lfw_data/test_ident_gallery_full_list.txt'
+#        probe_list_file = '../lfw_data/test_ident_probe_full_list.txt'
+#        save_dir = './eval_rlt_lfw_full_list'
 
         distance = 'cosine'
         top_n = 10

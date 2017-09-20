@@ -1,20 +1,20 @@
 args: 
 Namespace(distance='cosine', feature_mat_file='C:/zyf/dnn_models/face_models/lfw_eval_results/LFW-mtcnn-simaligned-96x112_center_face_model_orig.mat', gallery_list_file='../lfw_data/test_ident_gallery.txt', no_normalize=False, probe_list_file='../lfw_data/test_ident_probe.txt', save_dir='./eval_rlt', top_n=10)
 
-Num of gallery features: 11552
-Num of probe features: 1680
+Num of gallery features: 5748
+Num of probe features: 7484
 
 TOP_N  	cnt  	 ratio
 ----------------------
-top_1	 1470	0.8750
-top_2	 1513	0.9006
-top_3	 1537	0.9149
-top_4	 1552	0.9238
-top_5	 1555	0.9256
-top_6	 1559	0.9280
-top_7	 1562	0.9298
-top_8	 1565	0.9315
-top_9	 1569	0.9339
-top_10	 1571	0.9351
+top_1	 6141	0.8206
+top_2	 6464	0.8637
+top_3	 6583	0.8796
+top_4	 6667	0.8908
+top_5	 6707	0.8962
+top_6	 6745	0.9013
+top_7	 6780	0.9059
+top_8	 6795	0.9079
+top_9	 6810	0.9099
+top_10	 6825	0.9119
 
 
