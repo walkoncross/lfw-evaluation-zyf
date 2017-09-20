@@ -170,10 +170,10 @@ def parse_arguments(argv):
                         help='Path to the .mat feature file.')
     parser.add_argument('--gallery_list_file', type=str,
                         help='The file of gallery list',
-                        default='./test_ident_gallery.txt')
+                        default='../lfw_data//test_ident_gallery.txt')
     parser.add_argument('--probe_list_file', type=str,
                         help='The file of probe list',
-                        default='./test_ident_probe.txt')
+                        default='../lfw_data//test_ident_probe.txt')
     parser.add_argument('--save_dir', type=str,
                         help='directory saving result files',
                         default='./eval_rlt/')
@@ -191,7 +191,7 @@ def parse_arguments(argv):
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         #        ftr_path = 'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-aligned-96x112_center_face_model_orig.mat'
-        ftr_path = 'C:/zyf/dnn_models/face_models/lfw_eval_results/LFW-mtcnn-simaligned-96x112_center_face_model_orig.mat'
+        ftr_path = 'C:/zyf/dnn_models/face_models/lfw_eval_results/lfw-ftr-nowarp-224x224_vgg-face.mat'
 #        ftr_path = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-simaligned-96x112_center_face_model_orig.mat'
 
         gallery_list_file = '../lfw_data/test_ident_gallery.txt'
