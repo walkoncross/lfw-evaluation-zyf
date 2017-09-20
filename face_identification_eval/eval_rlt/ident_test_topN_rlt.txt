@@ -4,6 +4,17 @@ Namespace(distance='cosine', feature_mat_file='C:/zyf/dnn_models/face_models/lfw
 Num of gallery features: 11552
 Num of probe features: 1680
 
-top_0	top_1	top_2	top_3	top_4	top_5	top_6	top_7	top_8	top_9	
- 1470	 1513	 1537	 1552	 1555	 1559	 1562	 1565	 1569	 1571	
-0.8750	0.9006	0.9149	0.9238	0.9256	0.9280	0.9298	0.9315	0.9339	0.9351	
+TOP_N  	cnt  	 ratio
+----------------------
+top_1	 1470	0.8750
+top_2	 1513	0.9006
+top_3	 1537	0.9149
+top_4	 1552	0.9238
+top_5	 1555	0.9256
+top_6	 1559	0.9280
+top_7	 1562	0.9298
+top_8	 1565	0.9315
+top_9	 1569	0.9339
+top_10	 1571	0.9351
+
+
