@@ -144,16 +144,19 @@ def eval_topN(argv):
     print "top_N_cnt_ttl: ", top_N_cnt_ttl
     print "top_N_ratio: ", top_N_ratio
 
+
+    fp_rlt.write("TOP_N  \tcnt  \t ratio\n")
+    fp_rlt.write("----------------------\n")
     for j in range(top_N):
-        fp_rlt.write("top_%d\t" % j)
+        fp_rlt.write("top_%d\t%5d\t%5.4f\n" % (j+1, top_N_cnt_ttl[j], top_N_ratio[j]))
     fp_rlt.write("\n")
 
-    for j in range(top_N):
-        fp_rlt.write("%5d\t" % top_N_cnt_ttl[j])
-    fp_rlt.write("\n")
-
-    for j in range(top_N):
-        fp_rlt.write("%5.4f\t" % top_N_ratio[j])
+#    for j in range(top_N):
+#        fp_rlt.write("%5d\t" % top_N_cnt_ttl[j])
+#    fp_rlt.write("\n")
+#
+#    for j in range(top_N):
+#        fp_rlt.write("%5d\t" % top_N_ratio[j])
 
     fp_rlt.write("\n")
 
@@ -191,12 +194,12 @@ if __name__ == '__main__':
         ftr_path = 'C:/zyf/dnn_models/face_models/lfw_eval_results/LFW-mtcnn-simaligned-96x112_center_face_model_orig.mat'
 #        ftr_path = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/LFW-mtcnn-simaligned-96x112_center_face_model_orig.mat'
 
-        gallery_list_file = '../lfw_data/test_ident_gallery.txt'
-        probe_list_file = '../lfw_data/test_ident_probe.txt'
-        save_dir = './eval_rlt'
-#        gallery_list_file = '../lfw_data/test_ident_gallery_full_list.txt'
-#        probe_list_file = '../lfw_data/test_ident_probe_full_list.txt'
-#        save_dir = './eval_rlt_lfw_full_list'
+#        gallery_list_file = '../lfw_data/test_ident_gallery.txt'
+#        probe_list_file = '../lfw_data/test_ident_probe.txt'
+#        save_dir = './eval_rlt'
+        gallery_list_file = '../lfw_data/test_ident_gallery_full_list.txt'
+        probe_list_file = '../lfw_data/test_ident_probe_full_list.txt'
+        save_dir = './eval_rlt_lfw_full_list'
 
         distance = 'cosine'
         top_n = 10
