@@ -146,7 +146,7 @@ def parse_arguments(argv):
                         help='Path to the .mat feature file.')
     parser.add_argument('--image_list_file', type=str,
                         help='The file of image list with person ids',
-                        default='./test_pairs_same.txt')
+                        default='../lfw_data/lfw_list_mtcnn.txt')
     parser.add_argument('--save_dir', type=str,
                         help='directory for saving result files',
                         default='./eval_rlt')
