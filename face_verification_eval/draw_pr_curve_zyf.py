@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
 import numpy as np
-import matplotlib.pyplot as plt
 import os.path as osp
 import os
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 default_num_threshs = 2000
 default_threshs = np.linspace(0, 1, default_num_threshs, endpoint=False)
@@ -146,7 +146,9 @@ def calc_presicion_recall(tp, fn, tn, fp, threshs=None, save_dir='./'):
 
     fp_pr.close()
 
-    balanced_precision = tp / (tp + fp / 3.1)
+    balance_ratio = float(tn[0] + fp[0]) / (tp[0] + fn[0])
+    print 'balance_ratio: ', balance_ratio
+    balanced_precision = tp / (tp + fp / balance_ratio)
 
     fp_pr_bl = open(osp.join(save_dir, fname_balanced_pr), "w")
 
@@ -272,38 +274,40 @@ def draw_analysis_figure(tp, fn, tn, fp, save_dir='./', draw_balanced_pr=False):
     plt.show()
     plt.savefig(osp.join(save_dir, fname_roc_img))
 
-	if draw_balanced_pr:
-		balanced_precision = tp / (tp + fp / 3.1)
+    if draw_balanced_pr:
+        balance_ratio = float(tn[0] + fp[0]) / (tp[0] + fn[0])
+        print 'balance_ratio: ', balance_ratio
+        balanced_precision = tp / (tp + fp / balance_ratio)
 
-		#    fp_pr = open(fname_balanced_pr, "w")
-		#
-		#    fp_pr.write("thresh\t presicion\t recall\n")
-		#    for i in range(num_threshs):
-		#        fp_pr.write("%f\t %f\t %f\n" % (threshs[i], balanced_precision[i], recall[i]))
-		#
-		#    fp_pr.close()
+        #    fp_pr = open(fname_balanced_pr, "w")
+        #
+        #    fp_pr.write("thresh\t presicion\t recall\n")
+        #    for i in range(num_threshs):
+        #        fp_pr.write("%f\t %f\t %f\n" % (threshs[i], balanced_precision[i], recall[i]))
+        #
+        #    fp_pr.close()
 
-		#    fp_roc = open(fname_roc, "w")
-		#
-		#    fp_roc.write("thresh\t tp\t fn\t tn\t fp\t tpr\t \tfpr\n")
-		#    for i in range(num_threshs):
-		#        fp_roc.write("%f\t %d\t %d\t %d\t %d\t %f\t %f\n" % (threshs[i], tp[i], fn[i], tn[i], fp[i], recall[i], fpr[i]))
-		#
-		#    fp_roc.close()
+        #    fp_roc = open(fname_roc, "w")
+        #
+        #    fp_roc.write("thresh\t tp\t fn\t tn\t fp\t tpr\t \tfpr\n")
+        #    for i in range(num_threshs):
+        #        fp_roc.write("%f\t %d\t %d\t %d\t %d\t %f\t %f\n" % (threshs[i], tp[i], fn[i], tn[i], fp[i], recall[i], fpr[i]))
+        #
+        #    fp_roc.close()
 
-		print "Draw balanced PR curve"
-		plt.figure(3)
-		plt.plot(recall, balanced_precision)
+        print "Draw balanced PR curve"
+        plt.figure(3)
+        plt.plot(recall, balanced_precision)
 
-		plt.xticks(np.arange(0, 1.1, 0.1))
-		plt.yticks(np.arange(0, 1.1, 0.1))
-		plt.title('Balanced-Precision vs. Recall Curve')
-		plt.xlabel('Recall')
-		plt.ylabel('Precision')
-		plt.grid(which='both', color='r', linestyle='--', linewidth=1)
-		plt.show()
+        plt.xticks(np.arange(0, 1.1, 0.1))
+        plt.yticks(np.arange(0, 1.1, 0.1))
+        plt.title('Balanced-Precision vs. Recall Curve')
+        plt.xlabel('Recall')
+        plt.ylabel('Precision')
+        plt.grid(which='both', color='r', linestyle='--', linewidth=1)
+        plt.show()
 
-		plt.savefig(osp.join(save_dir, fname_balanced_pr_img))
+        plt.savefig(osp.join(save_dir, fname_balanced_pr_img))
 
 
 if __name__ == "__main__":

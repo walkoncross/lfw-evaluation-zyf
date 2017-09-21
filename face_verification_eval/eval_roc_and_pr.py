@@ -56,6 +56,10 @@ def eval_roc_and_pr(argv):
     if not osp.exists(save_dir):
         os.makedirs(save_dir)
 
+    fp_log = open(osp.join(save_dir, 'eval.log'), 'w')
+    fp_log.write('args:\n{}\n\n'.format(args))
+    fp_log.close()
+
     do_norm = not(args.no_normalize)
     ftr_mat = load_mat_features(args.feature_mat_file, do_norm)
 

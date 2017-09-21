@@ -34,6 +34,7 @@ def load_image_list(list_file):
 
     return (img_list, id_list)
 
+
 def generate_gt_mat(id_list):
     num_ids = len(id_list)
 
@@ -44,6 +45,7 @@ def generate_gt_mat(id_list):
         gt_mat[i] = (id_mat==id_mat[i])
 
     return gt_mat
+
 
 def main():
     img_list, id_list = load_image_list(list_file)
