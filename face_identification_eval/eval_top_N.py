@@ -8,6 +8,7 @@ import sys
 import os
 import os.path as osp
 
+sys.path.append('../io')
 from load_features import load_mat_features
 
 
@@ -18,14 +19,14 @@ def load_image_list(list_file):
     idx_list = []
     id_list = []
 
-    idx_cnt  = 0
+    idx_cnt = 0
     for line in fp:
         line_split = line.split()
         img_list.append(line_split[0])
-        if len(line_split)>2: # for line format: <img_name> <img_idx> <img_id>
+        if len(line_split) > 2:  # for line format: <img_name> <img_idx> <img_id>
             idx_list.append(int(line_split[1]))
             id_list.append(int(line_split[2]))
-        else: # for line format: <img_name> <img_id>
+        else:  # for line format: <img_name> <img_id>
             idx_list.append(idx_cnt)
             idx_cnt += 1
 
@@ -44,7 +45,7 @@ def eval_topN(argv):
 #        print "{}: {}".format(k,v)
     top_N = args.top_n
 
-    if top_N<5:
+    if top_N < 5:
         top_N = 5
 
     save_dir = args.save_dir
@@ -57,15 +58,17 @@ def eval_topN(argv):
     do_norm = not(args.no_normalize)
     ftr_mat = load_mat_features(args.feature_mat_file, do_norm)
 
-    gallery_img_list, gallery_idx_list,  gallery_id_list= load_image_list(args.gallery_list_file)
+    gallery_img_list, gallery_idx_list,  gallery_id_list = load_image_list(
+        args.gallery_list_file)
     gallery_ftrs = ftr_mat[np.array(gallery_idx_list)]
     print "gallery_ftrs.shape: ", gallery_ftrs.shape
 
     n_gallery = len(gallery_img_list)
-    if top_N>n_gallery:
+    if top_N > n_gallery:
         top_N = n_gallery
 
-    probe_img_list, probe_idx_list, probe_id_list = load_image_list(args.probe_list_file)
+    probe_img_list, probe_idx_list, probe_id_list = load_image_list(
+        args.probe_list_file)
     probe_ftrs = ftr_mat[np.array(probe_idx_list)]
     print "probe_ftrs.shape: ", probe_ftrs.shape
 
@@ -82,7 +85,7 @@ def eval_topN(argv):
         top_N_cnt = np.zeros(top_N)
 
         sim_row = similarity_mat[i]
-        top_N_idx_idx = np.argsort(-sim_row)[:top_N+1]
+        top_N_idx_idx = np.argsort(-sim_row)[:top_N + 1]
         top_one_idx = gallery_idx_list[top_N_idx_idx[0]]
 
 #        if i==0:
@@ -101,7 +104,7 @@ def eval_topN(argv):
 #            print "top_N_id:", gallery_id_list[top_N_idx_idx]
 
         if top_one_idx == probe_idx_list[i]:
-            top_N_idx_idx = top_N_idx_idx[1:top_N+1]
+            top_N_idx_idx = top_N_idx_idx[1:top_N + 1]
         else:
             top_N_idx_idx = top_N_idx_idx[0:top_N]
 
@@ -112,14 +115,14 @@ def eval_topN(argv):
 #            print "top_N_idx:", gallery_idx_list[top_N_idx_idx]
 #            print "top_N_id:", gallery_id_list[top_N_idx_idx]
 
-        for j,idx_idx in enumerate(top_N_idx_idx):
-            top_N_cnt[j] += (probe_id_list[i]==gallery_id_list[idx_idx])
+        for j, idx_idx in enumerate(top_N_idx_idx):
+            top_N_cnt[j] += (probe_id_list[i] == gallery_id_list[idx_idx])
 
 #        if i==0:
 #            print "top_N_cnt:", top_N_cnt
 
         for j in range(1, top_N):
-            top_N_cnt[j] += top_N_cnt[j-1]
+            top_N_cnt[j] += top_N_cnt[j - 1]
 #
 #        if i==0:
 #            print "top_N_cnt:", top_N_cnt
@@ -128,7 +131,7 @@ def eval_topN(argv):
         for j in range(top_N):
             fp_rlt.write("\t%5d" % top_N_cnt[j])
 
-            top_N_cnt_ttl[j] += (top_N_cnt[j]>0)
+            top_N_cnt_ttl[j] += (top_N_cnt[j] > 0)
 
         fp_rlt.write("\n")
     fp_rlt.close()
@@ -136,19 +139,19 @@ def eval_topN(argv):
     fp_rlt = open(fn_rlt2, 'w')
     fp_rlt.write("args: \n{}\n\n".format(args))
 
-    fp_rlt.write("Num of gallery features: %d\n" % n_gallery )
-    fp_rlt.write("Num of probe features: %d\n\n" % n_probe )
+    fp_rlt.write("Num of gallery features: %d\n" % n_gallery)
+    fp_rlt.write("Num of probe features: %d\n\n" % n_probe)
 
     top_N_ratio = top_N_cnt_ttl / n_probe
 
     print "top_N_cnt_ttl: ", top_N_cnt_ttl
     print "top_N_ratio: ", top_N_ratio
 
-
     fp_rlt.write("TOP_N  \tcnt  \t ratio\n")
     fp_rlt.write("----------------------\n")
     for j in range(top_N):
-        fp_rlt.write("top_%d\t%5d\t%5.4f\n" % (j+1, top_N_cnt_ttl[j], top_N_ratio[j]))
+        fp_rlt.write("top_%d\t%5d\t%5.4f\n" %
+                     (j + 1, top_N_cnt_ttl[j], top_N_ratio[j]))
     fp_rlt.write("\n")
 
 #    for j in range(top_N):

@@ -36,6 +36,9 @@ def load_mat_features(data_mat_file, pairs_mat_file,
         raise Exception('Counld not find keyword "feature" or "features" in .mat file')
 
 #    print "features.shape: ", features.shape
+    if features.ndim > 2:
+        features = np.squeeze(features)
+        print "after squeeze, features.shape: ", features.shape
 
     pos_ind_1 = pos_pairs[0].reshape(nrof_kfolds, nrof_features_per_fold)
     pos_ind_2 = pos_pairs[1].reshape(nrof_kfolds, nrof_features_per_fold)
@@ -92,8 +95,8 @@ def load_mat_features(data_mat_file, pairs_mat_file,
 
 
 if __name__ == "__main__":
-    data_mat_file = r'C:/zyf/dnn_models/face_models/centerloss/lfw_eval_results/face_snapshot_0509_val0.1_batch476_iter_36000_fixbug.mat'
-    pairs_mat_file = './lfw_pairs_zyf.mat'
+    data_mat_file = r'C:/zyf/dnn_models/face_models/lfw_eval_results/center_face_model_fixbug.mat'
+    pairs_mat_file = '../lfw_data/lfw_pairs_zyf.mat'
     (ftrs, gt_labels) = load_mat_features(data_mat_file,
                                           pairs_mat_file,
                                           nrof_kfolds=10,

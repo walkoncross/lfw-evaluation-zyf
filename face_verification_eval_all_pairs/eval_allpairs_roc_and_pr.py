@@ -8,6 +8,8 @@ import sys
 import os
 import os.path as osp
 
+sys.path.append('../io')
+
 from load_features import load_mat_features
 from draw_allpairs_pr_curve_zyf import calc_roc, calc_presicion_recall, draw_analysis_figure
 

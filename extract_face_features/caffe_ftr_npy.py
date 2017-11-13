@@ -20,10 +20,11 @@ from collections import OrderedDict
 
 import time
 
-caffe_root = '/opt/caffe/'
-
 import sys
+
+caffe_root = '/opt/caffe/'
 sys.path.insert(0, caffe_root + 'python')
+
 import caffe
 
 
@@ -311,7 +312,7 @@ if __name__ == '__main__':
 #        image_list_file = r'face_chips\face_chips_list.txt'
         image_dir = r'C:\zyf\github\mtcnn-caffe-good\face_aligner\face_chips'
         image_list_file = r'face_chips\face_chips_list_2.txt'
-        save_path = 'extracted_features_2'
+        save_path = 'extracted_features_sphereface_noflip'
         argv = [network_def, trained_model, mean_file,
                 image_dir, image_list_file,
                 layer_name, save_path]
