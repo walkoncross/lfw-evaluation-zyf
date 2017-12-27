@@ -23,6 +23,20 @@ import time
 import sys
 
 caffe_root = '/opt/caffe/'
+
+NO_INPUT_SCALE = False
+
+if not NO_INPUT_SCALE:
+	# for centerface/normface/sphereface models
+	raw_scale = 255
+	input_scale = 0.0078125
+else:
+	# for vggface/face-resnet (other face models finetuned from imagenet models)
+	raw_scale = 255
+	input_scale = 1.0
+
+
+import sys
 sys.path.insert(0, caffe_root + 'python')
 
 import caffe
@@ -105,7 +119,8 @@ def extract_feature(network_proto_path,
     net = caffe.Classifier(network_proto_path,
                            network_model_path,
                            None, data_mean,
-                           0.0078125, 255, (2, 1, 0))
+                           input_scale, raw_scale,
+                           (2, 1, 0))
 #    net = caffe.Classifier(network_proto_path, network_model_path, None, data_mean, 2.0, 1.0, (2,1,0))
    #--->end added by zhaoyafei 2017-05-09
 
