@@ -37,13 +37,14 @@ PLUS_MIRROR = True
 NO_INPUT_SCALE = False
 
 if not NO_INPUT_SCALE:
-	# for centerface/normface/sphereface models
-	raw_scale = 255
-	input_scale = 0.0078125
+    # for centerface/normface/sphereface models
+    raw_scale = 255
+    input_scale = 0.0078125
 else:
-	# for vggface/face-resnet (other face models finetuned from imagenet models)
-	raw_scale = 255
-	input_scale = 1.0
+    # for vggface/face-resnet (other face models finetuned from imagenet
+    # models)
+    raw_scale = 255
+    input_scale = 1.0
 
 
 class UnpickleError(Exception):
@@ -538,7 +539,7 @@ def save_features(network_def, network_model, mean_file, img_path, save_path):
     if mean_file is not None:
         data_mean = np.load(mean_file)
     caffe.set_mode_cpu()
-	caffe.set_device(gpu_id)
+        caffe.set_device(gpu_id)
 #    caffe.set_device(2)
 #    net = caffe.Classifier(network_def, network_model, None, data_mean, None, None, (2,1,0))
     net = caffe.Classifier(network_def, network_model,

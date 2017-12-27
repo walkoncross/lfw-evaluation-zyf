@@ -28,13 +28,14 @@ gpu_id = 0
 NO_INPUT_SCALE = False
 
 if not NO_INPUT_SCALE:
-	# for centerface/normface/sphereface models
-	raw_scale = 255
-	input_scale = 0.0078125
+    # for centerface/normface/sphereface models
+    raw_scale = 255
+    input_scale = 0.0078125
 else:
-	# for vggface/face-resnet (other face models finetuned from imagenet models)
-	raw_scale = 255
-	input_scale = 1.0
+    # for vggface/face-resnet (other face models finetuned from imagenet
+    # models)
+    raw_scale = 255
+    input_scale = 1.0
 
 
 import sys
@@ -254,7 +255,6 @@ def extract_features_to_npy(network_proto_path,
     print img_list[0:10]
     # exit()
 
-
     ftrs = extract_feature(network_proto_path,
                            network_model_path,
                            img_list,
@@ -262,11 +262,10 @@ def extract_features_to_npy(network_proto_path,
                            layer_name,
                            image_as_grey)
 
-
     if not osp.exists(save_path):
         os.makedirs(save_path)
 
-    for i,fn in enumerate(img_list):
+    for i, fn in enumerate(img_list):
         base_name = osp.basename(fn)
         base_name = osp.splitext(base_name)[0]
         save_name = osp.join(save_path, base_name + '_feat.npy')
@@ -305,20 +304,20 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if len(sys.argv)==1:
-        ###centerface
-#        network_def = r'C:\zyf\dnn_models\face_models\centerloss\center_face_deploy.prototxt'
-#        trained_model = r'C:\zyf\dnn_models\face_models\centerloss\center_face_model.caffemodel'
-#        mean_file = r'C:\zyf\dnn_models\face_models\centerloss\center_face_mean_127.5_1x3.npy'
-#        layer_name = 'fc5'
+    if len(sys.argv) == 1:
+        # centerface
+        #        network_def = r'C:\zyf\dnn_models\face_models\centerloss\center_face_deploy.prototxt'
+        #        trained_model = r'C:\zyf\dnn_models\face_models\centerloss\center_face_model.caffemodel'
+        #        mean_file = r'C:\zyf\dnn_models\face_models\centerloss\center_face_mean_127.5_1x3.npy'
+        #        layer_name = 'fc5'
 
-        ###normface (not work, because 'Flip' layer is not defined in BVLC caffe)
-#        network_def = r'C:\zyf\dnn_models\face_models\norm_face\Center_Face_99.2\face_deploy.prototxt'
-#        trained_model = r'C:\zyf\dnn_models\face_models\norm_face\Center_Face_99.2\face_train_test_iter_6000.caffemodel'
-#        mean_file = r'C:\zyf\dnn_models\face_models\centerloss\center_face_mean_127.5_1x3.npy'
-#        layer_name = 'eltmax_fc5'
+        # normface (not work, because 'Flip' layer is not defined in BVLC caffe)
+        #        network_def = r'C:\zyf\dnn_models\face_models\norm_face\Center_Face_99.2\face_deploy.prototxt'
+        #        trained_model = r'C:\zyf\dnn_models\face_models\norm_face\Center_Face_99.2\face_train_test_iter_6000.caffemodel'
+        #        mean_file = r'C:\zyf\dnn_models\face_models\centerloss\center_face_mean_127.5_1x3.npy'
+        #        layer_name = 'eltmax_fc5'
 
-        ###sphereface
+        # sphereface
         network_def = r'C:\zyf\dnn_models\face_models\centerloss\center_face_deploy.prototxt'
 #        trained_model = r'C:\zyf\dnn_models\face_models\\sphere_face_cwl\sphereface_iter_22000.caffemodel'
         trained_model = r'C:\zyf\dnn_models\face_models\\sphere_face\sphereface_model_iter_28000_bs512.caffemodel'
@@ -336,4 +335,3 @@ if __name__ == '__main__':
         main(argv)
     else:
         main(sys.argv[1:])
-

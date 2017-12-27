@@ -37,13 +37,14 @@ PLUS_CONCAT = True
 NO_INPUT_SCALE = False
 
 if not NO_INPUT_SCALE:
-	# for centerface/normface/sphereface models
-	raw_scale = 255
-	input_scale = 0.0078125
+    # for centerface/normface/sphereface models
+    raw_scale = 255
+    input_scale = 0.0078125
 else:
-	# for vggface/face-resnet (other face models finetuned from imagenet models)
-	raw_scale = 255
-	input_scale = 1.0
+    # for vggface/face-resnet (other face models finetuned from imagenet
+    # models)
+    raw_scale = 255
+    input_scale = 1.0
 
 
 class UnpickleError(Exception):
@@ -208,7 +209,7 @@ def extract_feature(network_proto_path,
     features = np.empty(features_shape, dtype='float32', order='C')
     if PLUS_CONCAT:
         features_concat = np.empty(
-            (len(image_list), np.array(shp[1:]).prod()*2), dtype='float32', order='C')
+            (len(image_list), np.array(shp[1:]).prod() * 2), dtype='float32', order='C')
 
     img_batch = []
 
@@ -292,7 +293,7 @@ def extract_feature(network_proto_path,
                 features[cnt - n_imgs + 1:cnt +
                          1, ...] = ftrs[:n_imgs, ...].copy()
                 features_concat[cnt - n_imgs +
-                                       1:cnt + 1, ...] = concat_ftrs
+                                1:cnt + 1, ...] = concat_ftrs
             else:
                 # features[cnt-n_imgs+1:cnt+1, ...] = blobs[layer_name][0:n_imgs, ...].copy()
                 ftrs = blobs[layer_name][0:n_imgs, ...]
@@ -450,7 +451,7 @@ def save_features(network_def, network_model, mean_file, img_path, save_path):
     if mean_file is not None:
         data_mean = np.load(mean_file)
     caffe.set_mode_cpu()
-	caffe.set_device(gpu_id)
+        caffe.set_device(gpu_id)
 #    caffe.set_device(2)
 #    net = caffe.Classifier(network_def, network_model, None, data_mean, None, None, (2,1,0))
     net = caffe.Classifier(network_def, network_model,

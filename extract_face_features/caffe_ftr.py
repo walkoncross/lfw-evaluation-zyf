@@ -32,16 +32,14 @@ gpu_id = 0
 NO_INPUT_SCALE = False
 
 if not NO_INPUT_SCALE:
-	# for centerface/normface/sphereface models
-	raw_scale = 255
-	input_scale = 0.0078125
+    # for centerface/normface/sphereface models
+    raw_scale = 255
+    input_scale = 0.0078125
 else:
-	# for vggface/face-resnet (other face models finetuned from imagenet models)
-	raw_scale = 255
-	input_scale = 1.0
-
-
-
+    # for vggface/face-resnet (other face models finetuned from imagenet
+    # models)
+    raw_scale = 255
+    input_scale = 1.0
 
 
 class UnpickleError(Exception):
@@ -182,7 +180,7 @@ def extract_feature(network_proto_path,
     batch_size = input_shape[0]
     print 'original input data shape: ', input_shape
     print 'original batch_size: ', batch_size
-	
+
     shp = blobs[layer_name].shape
     print 'feature map shape: ', shp
     # print 'debug-------\nexit'
@@ -286,11 +284,11 @@ def extract_features_to_mat(network_proto_path,
     float_labels = labels_list_to_float(labels)
 
     ftr = extract_feature(network_proto_path,
-                           network_model_path,
-                           img_list,
-                           data_mean,
-                           layer_name,
-                           image_as_grey)
+                          network_model_path,
+                          img_list,
+                          data_mean,
+                          layer_name,
+                          image_as_grey)
     # print ftr.shape
 #    if ftr.shape[3]==1 and ftr.shape[2]==1:
 #        ftr = ftr[:,:,0,0]
@@ -466,7 +464,7 @@ def save_features(network_def, network_model, mean_file, img_path, save_path):
     if mean_file is not None:
         data_mean = np.load(mean_file)
     caffe.set_mode_cpu()
-	caffe.set_device(gpu_id)
+        caffe.set_device(gpu_id)
 #    caffe.set_device(2)
 #    net = caffe.Classifier(network_def, network_model, None, data_mean, None, None, (2,1,0))
     net = caffe.Classifier(network_def, network_model,
