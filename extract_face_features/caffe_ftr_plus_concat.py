@@ -24,6 +24,15 @@ import os.path as osp
 import time
 
 caffe_root = '/opt/caffe/'
+import sys
+sys.path.insert(0, caffe_root + 'python')
+import caffe
+
+gpu_id = 0
+
+PLUS_CONCAT = True
+# MIRROR_COMBINE_METHOD = 'elt-max'
+# MIRROR_COMBINE_METHOD = 'elt-avg'
 
 NO_INPUT_SCALE = False
 
@@ -35,15 +44,6 @@ else:
 	# for vggface/face-resnet (other face models finetuned from imagenet models)
 	raw_scale = 255
 	input_scale = 1.0
-
-
-import sys
-sys.path.insert(0, caffe_root + 'python')
-import caffe
-
-PLUS_CONCAT = True
-# MIRROR_COMBINE_METHOD = 'elt-max'
-# MIRROR_COMBINE_METHOD = 'elt-avg'
 
 
 class UnpickleError(Exception):
@@ -146,6 +146,7 @@ def extract_feature(network_proto_path,
         data_mean = np.load(data_mean)
 
     caffe.set_mode_gpu()
+    caffe.set_device(gpu_id)
 # net = caffe.Classifier(network_proto_path, network_model_path, None,
 # data_mean, None, None, (2,1,0))
     net = caffe.Classifier(network_proto_path,
@@ -449,6 +450,7 @@ def save_features(network_def, network_model, mean_file, img_path, save_path):
     if mean_file is not None:
         data_mean = np.load(mean_file)
     caffe.set_mode_cpu()
+	caffe.set_device(gpu_id)
 #    caffe.set_device(2)
 #    net = caffe.Classifier(network_def, network_model, None, data_mean, None, None, (2,1,0))
     net = caffe.Classifier(network_def, network_model,

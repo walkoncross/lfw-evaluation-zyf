@@ -23,6 +23,7 @@ import time
 import sys
 
 caffe_root = '/opt/caffe/'
+gpu_id = 0
 
 NO_INPUT_SCALE = False
 
@@ -114,6 +115,7 @@ def extract_feature(network_proto_path,
         data_mean = np.load(data_mean)
 
     caffe.set_mode_gpu()
+    caffe.set_device(gpu_id)
 # net = caffe.Classifier(network_proto_path, network_model_path, None,
 # data_mean, None, None, (2,1,0))
     net = caffe.Classifier(network_proto_path,
